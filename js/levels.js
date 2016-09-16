@@ -1,5 +1,5 @@
-var levels = {
-    level1:{
+var levels = [
+    {
         main:{
             background:{
                 top:0,
@@ -24,4 +24,4 @@ var levels = {
             ]
         }
     }
-}
+]
