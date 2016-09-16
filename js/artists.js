@@ -5,35 +5,45 @@ var groundArtist = function(sprite, context, spritesheet, type, convas){
 
     this.context = context;
     this.convas = convas;
-    this.widthToDraw;
+    this.widthToDraw = 0;
     this.leftToDraw;
 }
 groundArtist.prototype = {
     draw:function(){
         this.calculateDrawing();
-        for(var top = this.sprite.top; top <= this.sprite.top + this.sprite.height; top += type.height){
-            if(type.serface && top === this.sprite.top)
-                this.drawRow(type.serface, top);
-            else this.drawRow(type.body, top);
+        for(var top = this.sprite.top; top <= this.sprite.top + this.sprite.height; top += this.type.body.middle.height){
+            if(this.type.serface && top === this.sprite.top){
+                this.drawRow(this.type.serface, top);
+            }
+            else this.drawRow(this.type.body, top);
         }
     },
     calculateDrawing:function(){
         if(this.sprite.left + this.sprite.width > this.sprite.offset)
             if(this.sprite.left > this.sprite.offset)
                 this.leftToDraw = this.sprite.left;
-            else this.leftToDraw = this.sprite.offset;
-        if(this.sprite.left > this.sprite.offset + this.convas.width)
+            else {
+                this.leftToDraw = this.sprite.offset;
+                this.widthToDraw -= this.sprite.offset - this.sprite.left;
+            }
+        if(this.sprite.left < this.sprite.offset + this.convas.width)
             if(this.sprite.left + this.sprite.width < this.sprite.offset + this.convas.width)
-                this.widthToDraw = this.sprite.width;
-            else this.widthToDraw = this.sprite.offset + this.convas.width;
+                this.widthToDraw += this.sprite.width;
+            else this.widthToDraw += this.sprite.offset + this.convas.width;
     },
     drawRow:function(row, top){
-        for (var left = this.leftToDraw; left <= this.leftToDraw + this.widthToDraw; left+= this.sprite.width) {
+        var widthToOffset = row.left.width;
+        for (var left = this.leftToDraw; left < this.leftToDraw + this.widthToDraw; left+= widthToOffset) {
             if(left === this.leftToDraw && left === this.sprite.left)
                 this.drawCell(row.left, left, top)
-            else if(left + this.sprite.width === this.sprite.left + this.sprite.width)
+            else if(left+widthToOffset > this.leftToDraw + this.widthToDraw)
                 this.drawCell(row.right, left, top);
             else this.drawCell(row.middle, left, top);
+
+            if(left > this.leftToDraw)
+                if(left< this.leftToDraw + this.widthToDraw)
+                    widthToOffset = row.middle.width;
+                else widthToOffset = row.right.width;
         }
     }, 
     drawCell(cell, left, top){

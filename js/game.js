@@ -28,6 +28,15 @@ superMario.prototype = {
             game.fps = game.calculateFps(now);
             
             //game.draw(now);
+           
+            game.runner.width = data.ground.serface.left.width + 10*data.ground.serface.middle.width  +data.ground.serface.right.width ;
+            game.runner.left = 60;
+            game.runner.offset += 1;
+            var artist = new groundArtist(game.runner, game.context, game.spritesheet, data.ground, game.convas);
+            game.runner.artist = artist;
+            game.context.translate(-game.runner.offset, 0);
+            artist.draw();
+            game.context.translate(game.runner.offset, 0);
             
             requestNextAnimationFrame(game.animate);
         }
@@ -44,6 +53,7 @@ superMario.prototype = {
     },
 
      startGame: function(){
+         this.runner = new Sprite("runner");
         window.requestNextAnimationFrame(this.animate);
     },
 

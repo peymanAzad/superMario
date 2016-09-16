@@ -188,7 +188,7 @@ var data = {
             left:{
                 top:256,
                 left:536,
-                width:16,
+                width:15,
                 height:16
             },
             middle:{
@@ -199,15 +199,15 @@ var data = {
             },
             right:{
                 top:256,
-                left:572,
-                width:16,
+                left:573,
+                width:15,
                 height:16
             }
         },
         body:{
             left:{
                 top:274,
-                left:537,
+                left:536,
                 width:15,
                 height:16
             },
@@ -219,7 +219,7 @@ var data = {
             },
             right:{
                 top:274,
-                left:572,
+                left:573,
                 width:15,
                 height:16
             }
