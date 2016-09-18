@@ -1,8 +1,11 @@
 var superMario = function(){
     this.convas = document.getElementById("convas-game");
     this.context = this.convas.getContext("2d");
+
+    this.timeSystem = new TimeSystem();
     
     this.toast = document.getElementById("toast");
+    this.paused = false;
 
     //........................................................levels
     this.level = 0;
@@ -16,22 +19,25 @@ var superMario = function(){
     this.PAUSE_CHECK_INTERVAL = 200;
     this.lastAnimationFrame = 0;
     this.lastFpsUpdateTime = 0;
+    this.VELOCITY_GROUND = 0.001;
 }
 
 superMario.prototype = {
      animate: function(now){
+         now = game.timeSystem.calculateGameTime();
         if(game.paused){
             setTimeout(function(){
                 requestNextAnimationFrame(game.animate)
             }, game.PAUSE_CHECK_INTERVAL);
         }else{
             game.fps = game.calculateFps(now);
+
             
             //game.draw(now);
            
             game.runner.width = data.ground.serface.left.width + 10*data.ground.serface.middle.width  +data.ground.serface.right.width ;
             game.runner.left = 60;
-            game.runner.offset += 1;
+            game.runner.offset += game.VELOCITY_GROUND * now;
             var artist = new groundArtist(game.runner, game.context, game.spritesheet, data.ground, game.convas);
             game.runner.artist = artist;
             game.context.translate(-game.runner.offset, 0);
@@ -40,6 +46,15 @@ superMario.prototype = {
             
             requestNextAnimationFrame(game.animate);
         }
+    },
+
+    togglePause: function(){
+        if(this.paused){
+            this.timeSystem.revertToLastTransducer();
+        }else{
+            this.timeSystem.setTransducer(function(t){return 0.0});
+        }
+        this.paused = !this.paused;
     },
     
     calculateFps: function(now){
@@ -53,6 +68,8 @@ superMario.prototype = {
     },
 
      startGame: function(){
+         this.timeSystem.start();
+         //game.timeSystem.setTransducer(function(t){return 0.0},2000);
          this.runner = new Sprite("runner");
         window.requestNextAnimationFrame(this.animate);
     },
@@ -75,6 +92,15 @@ superMario.prototype = {
          this.loadLevelData();
      }
 }
+window.addEventListener('keydown', function (e) {
+   var key = e.keyCode;
 
+  
+   
+ if (key === 80) { // 'p'
+      game.togglePause();
+   }
+   
+});
 var game = new superMario();
 game.initializeGame();
