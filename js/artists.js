@@ -5,12 +5,12 @@ var groundArtist = function(sprite, context, spritesheet, type, convas){
 
     this.context = context;
     this.convas = convas;
-    this.widthToDraw = 0;
-    this.leftToDraw;
+    this.widthToDraw = sprite.width;
+    this.leftToDraw = sprite.left;
 }
 groundArtist.prototype = {
     draw:function(){
-        this.calculateDrawing();
+        //this.calculateDrawing();
         for(var top = this.sprite.top; top <= this.sprite.top + this.sprite.height; top += this.type.body.middle.height){
             if(this.type.serface && top === this.sprite.top){
                 this.drawRow(this.type.serface, top);
@@ -33,24 +33,29 @@ groundArtist.prototype = {
     },
     drawRow:function(row, top){
         var widthToOffset = row.left.width;
-        for (var left = this.leftToDraw; left < this.leftToDraw + this.widthToDraw; left+= widthToOffset) {
-            if(left === this.leftToDraw && left === this.sprite.left)
+        for (var left = this.sprite.left; left < this.sprite.left + this.sprite.width; left+= widthToOffset) {
+            if(left === this.sprite.left)
                 this.drawCell(row.left, left, top)
-            else if(left+widthToOffset > this.leftToDraw + this.widthToDraw)
+            else if(left+widthToOffset > this.sprite.left + this.sprite.width)
                 this.drawCell(row.right, left, top);
             else this.drawCell(row.middle, left, top);
 
-            if(left > this.leftToDraw)
-                if(left< this.leftToDraw + this.widthToDraw)
+            if(left > this.sprite.left)
+                if(left + widthToOffset < this.sprite.left + this.sprite.width)
                     widthToOffset = row.middle.width;
                 else widthToOffset = row.right.width;
         }
+    },
+    cellIsInView: function(cell){
+        return cell.left + cell.width > this.sprite.offset && cell.left < this.sprite.offset + this.convas.width;
     }, 
     drawCell(cell, left, top){
+        if(this.cellIsInView(cell)){
         this.context.drawImage(this.spritesheet, cell.left, cell.top,
                                           cell.width, cell.height,
                                           left, top,
                                           cell.width, cell.height);
+        }
     }
 }
 
