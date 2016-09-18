@@ -120,3 +120,27 @@ platformArtist.prototype = {
                                             cell.width, cell.height);
     }
 }
+
+var backgroundArtist = function(convas, context, spritesheet, cell){
+    this.context = context;
+    this.spritesheet = spritesheet;
+    this.cell = cell;
+    this.convas = convas;
+}
+backgroundArtist.prototype = {
+    draw: function(backgroundOffset){
+        for(var left = 0; left < backgroundOffset + this.convas.width; left += this.cell.width)
+            if(left + this.cell.width > backgroundOffset && left < backgroundOffset + this.convas.width)
+                this.drawColumn(left);
+    },
+    drawColumn: function(left){
+        for(var top = 0; top < this.convas.height; top += this.cell.height)
+            this.drawCell(top, left);
+    },
+    drawCell: function(top, left){
+        this.context.drawImage(this.spritesheet, this.cell.left, this.cell.top,
+                                            this.cell.width, this.cell.height,
+                                            left, top,
+                                            this.cell.width, this.cell.height);
+    }
+}

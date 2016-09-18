@@ -7,6 +7,7 @@ var superMario = function(){
     this.toast = document.getElementById("toast");
     this.paused = false;
 
+
     //........................................................levels
     this.level = 0;
     this.subLevel = "Main";
@@ -14,12 +15,16 @@ var superMario = function(){
 
     //.........................................................images
     this.spritesheet = new Image();
+    this.backgroundArtist = new backgroundArtist(this.convas, this.context, this.spritesheet, data.background)
     
     //.........................................................constants
     this.PAUSE_CHECK_INTERVAL = 200;
     this.lastAnimationFrame = 0;
     this.lastFpsUpdateTime = 0;
     this.VELOCITY_GROUND = 0.001;
+    this.backgroundOffset = 0;
+    this.BACKGROUND_WIDTH = data.background.width;
+    this.DEFAULT_BACKGROUND_VELOCITY = 0.0001;
 }
 
 superMario.prototype = {
@@ -32,20 +37,45 @@ superMario.prototype = {
         }else{
             game.fps = game.calculateFps(now);
 
-            
-            //game.draw(now);
+            game.setOffsets(now);
+            game.draw(now);
            
-            game.runner.width = data.ground.serface.left.width + 10*data.ground.serface.middle.width  +data.ground.serface.right.width ;
-            game.runner.left = 60;
-            game.runner.offset += game.VELOCITY_GROUND * now;
-            var artist = new groundArtist(game.runner, game.context, game.spritesheet, data.ground, game.convas);
-            game.runner.artist = artist;
-            game.context.translate(-game.runner.offset, 0);
-            artist.draw();
-            game.context.translate(game.runner.offset, 0);
+            // game.runner.width = data.ground.serface.left.width + 10*data.ground.serface.middle.width  +data.ground.serface.right.width ;
+            // game.runner.left = 60;
+            // game.runner.offset += game.VELOCITY_GROUND * now;
+            // var artist = new groundArtist(game.runner, game.context, game.spritesheet, data.ground, game.convas);
+            // game.runner.artist = artist;
+            // game.context.translate(-game.runner.offset, 0);
+            // artist.draw();
+            // game.context.translate(game.runner.offset, 0);
             
             requestNextAnimationFrame(game.animate);
         }
+    },
+
+    setBackgroundOffset: function(now, offset){
+        if(!offset){
+            offset = this.DEFAULT_BACKGROUND_VELOCITY * now;
+        }
+        this.backgroundOffset += offset;
+        if (this.backgroundOffset < 0 || 
+        this.backgroundOffset > this.BACKGROUND_WIDTH) {
+         this.backgroundOffset = 0;
+      }
+    },
+
+    setOffsets: function(now){
+        this.setBackgroundOffset(now);
+    },
+
+    drawBackground: function(){
+        this.context.translate(-this.backgroundOffset,0);
+        this.backgroundArtist.draw(this.backgroundOffset);
+        this.context.translate(this.backgroundOffset, 0);
+    },
+
+    draw: function(now){
+        this.drawBackground();
     },
 
     togglePause: function(){

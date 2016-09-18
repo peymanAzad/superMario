@@ -224,5 +224,11 @@ var data = {
                 height:16
             }
         }
+    },
+    background:{
+        left:519,
+        top:295,
+        width:33,
+        height:30
     }
 }
