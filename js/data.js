@@ -8,11 +8,11 @@ var data = {
                 height:16
             }],
             run:[
-                {
-                    top:44,
-                    left:291,
-                    width:12,
-                    height:15
+               {
+                    top:43,
+                    left:320,
+                    width:15,
+                    height:16
                 },
                 {
                     top:43,
@@ -20,11 +20,12 @@ var data = {
                     width:11,
                     height:16
                 },
-                {
-                    top:43,
-                    left:320,
-                    width:15,
-                    heigth:16
+                
+                 {
+                    top:44,
+                    left:291,
+                    width:12,
+                    height:15
                 }
             ],
             jump:[
@@ -32,7 +33,7 @@ var data = {
                     top:43,
                     left:354,
                     width:16,
-                    heigth:16
+                    height:16
                 }
             ],
             lose:[
@@ -69,7 +70,7 @@ var data = {
                     top:43,
                     left:176,
                     width:15,
-                    heigth:16
+                    height:16
                 }
             ],
             jump:[
@@ -77,7 +78,7 @@ var data = {
                     top:43,
                     left:141,
                     width:16,
-                    heigth:16
+                    height:16
                 }
             ],
             lose:[
@@ -101,30 +102,32 @@ var data = {
             }],
             run:[
                 {
-                    top:2,
-                    left:295,
-                    width:16,
-                    height:30
-                },
-                {
                     top:1,
                     left:314,
                     width:14,
                     height:31
                 },
-                {
+                
+               {
                     top:0,
                     left:330,
                     width:16,
-                    heigth:32
+                    height:32
+                },
+                {
+                    top:2,
+                    left:295,
+                    width:16,
+                    height:30
                 }
+                
             ],
             jump:[
                 {
                     top:1,
                     left:368,
                     width:16,
-                    heigth:31
+                    height:31
                 }
             ],
             down:[
@@ -151,25 +154,27 @@ var data = {
                     width:16,
                     height:30
                 },
+                
                 {
                     top:1,
                     left:183,
                     width:14,
                     height:31
                 },
-                {
+                 {
                     top:0,
                     left:165,
                     width:16,
-                    heigth:32
+                    height:32
                 }
+               
             ],
             jump:[
                 {
                     top:1,
                     left:127,
                     width:16,
-                    heigth:31
+                    height:31
                 }
             ],
             down:[

@@ -8,7 +8,7 @@ var levels = [
                 width:data.mario.right.idle[0].width,
                 height:data.mario.right.idle[0].height,
                 vector:"right",
-                state: "idle"
+                state: "run"
             },
             platforms:[
                 {

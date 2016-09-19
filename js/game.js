@@ -27,7 +27,7 @@ var superMario = function(){
     this.DEFAULT_BACKGROUND_VELOCITY = 0.0001;
 
     //................................................................sprites
-    this.runnerType = "mario";
+    this.runnerType = "superMario";
 
     this.grounds =   [];
     this.platforms = [];
@@ -198,7 +198,14 @@ superMario.prototype = {
           sprite.left = runner.left;
           sprite.width = runner.width;
           sprite.height = runner.height;
-          var artist = new spriteArtist(sprite, this.context, this.spritesheet, data[this.runnerType][runner.vector], runner.state)
+          var artist = new spriteArtist(sprite, this.context, this.spritesheet, data[this.runnerType][runner.vector], runner.state);
+          sprite.behaviours.push(new CycleBehavior(0, 100));
+          sprite.velocityX = 0;
+          sprite.aX = 0.00008;
+        //   setTimeout(function(){
+        //       sprite.aX = 0;
+        //   }, 3000);
+          sprite.behaviours.push(new MoveBehavior(0, sprite.velocityX, sprite.aX, sprite.left));
           sprite.artist = artist;
           this.runner = sprite;
           this.sprites.push(sprite);

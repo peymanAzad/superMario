@@ -44,13 +44,13 @@ Sprite.prototype = {
         context.restore();
     },
     
-    update: function(time, fps, context, lastAnimationFrame){
+    update: function(time, context, lastAnimationFrame){
         for (var i = 0; i < this.behaviours.length; i++) {
             var element = this.behaviours[i];
             if (element === undefined) {
                 return;
             }
-            element.execute(this, time, fps, context, lastAnimationFrame);
+            element.execute(this, time, context, lastAnimationFrame);
         }
     },
     
