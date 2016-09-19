@@ -230,5 +230,11 @@ var data = {
         top:295,
         width:33,
         height:30
+    },
+    well:{
+        left:519,
+        top:131,
+        width:16,
+        height:17
     }
 }

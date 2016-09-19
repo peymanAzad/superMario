@@ -10,12 +10,12 @@ var superMario = function(){
 
     //........................................................levels
     this.level = 0;
-    this.subLevel = "Main";
+    this.subLevel = "main";
     this.levelData;
 
     //.........................................................images
     this.spritesheet = new Image();
-    this.backgroundArtist = new backgroundArtist(this.convas, this.context, this.spritesheet, data.background)
+    this.backgroundArtist;
     
     //.........................................................constants
     this.PAUSE_CHECK_INTERVAL = 200;
@@ -25,6 +25,14 @@ var superMario = function(){
     this.backgroundOffset = 0;
     this.BACKGROUND_WIDTH = data.background.width;
     this.DEFAULT_BACKGROUND_VELOCITY = 0.0001;
+
+    //................................................................sprites
+    this.runnerType = "mario";
+
+    this.grounds =   [];
+    this.platforms = [];
+    this.runner;
+    this.sprites =   [];
 }
 
 superMario.prototype = {
@@ -74,8 +82,38 @@ superMario.prototype = {
         this.context.translate(this.backgroundOffset, 0);
     },
 
+    isSpriteInGameConvas: function(sprite){
+        return (sprite.left + sprite.width > sprite.offset && sprite.left < sprite.offset + this.convas.width);
+    },
+    
+    isSpriteInView: function(sprite){
+        return this.isSpriteInGameConvas(sprite);
+    },
+
+    updateSprites: function(now){
+        for (var i = 0; i < this.sprites.length; i++) {
+            var sprite = this.sprites[i];
+            if(sprite.visible && this.isSpriteInView(sprite)){
+                sprite.update(now, this.context, this.lastAnimationFrame);
+            }
+        }
+    },
+    
+    drawSprites: function(){
+        for (var i = 0; i < this.sprites.length; i++) {
+            var sprite = this.sprites[i];
+            if(sprite.visible && this.isSpriteInView(sprite)){
+                this.context.translate(-sprite.offset, 0);
+                sprite.draw(this.context);
+                this.context.translate(sprite.offset, 0)
+            }
+        }
+    },
+
     draw: function(now){
         this.drawBackground();
+        this.updateSprites(now);
+        this.drawSprites();
     },
 
     togglePause: function(){
@@ -100,7 +138,7 @@ superMario.prototype = {
      startGame: function(){
          this.timeSystem.start();
          //game.timeSystem.setTransducer(function(t){return 0.0},2000);
-         this.runner = new Sprite("runner");
+         //this.runner = new Sprite("runner");
         window.requestNextAnimationFrame(this.animate);
     },
 
@@ -117,9 +155,67 @@ superMario.prototype = {
          this.levelData = level[this.subLevel];
      },
 
+     loadLevel: function(){
+         this.loadLevelData();
+         this.backgroundArtist =  new backgroundArtist(this.convas, this.context, this.spritesheet, this.levelData.background);
+         this.createSprites();
+     },
+
+     createGroundSprites: function(){
+         for (var index = 0; index < this.levelData.grounds.length; index++) {
+             var ground = this.levelData.grounds[index];
+             var sprite = new Sprite("ground");
+             sprite.left = ground.left;
+             sprite.top = ground.top;
+             sprite.width = ground.width;
+             sprite.height = ground.height;
+             var artist = new groundArtist(sprite, this.context, this.spritesheet, data.ground, this.convas);
+             sprite.artist = artist;
+             this.grounds.push(sprite);
+             this.sprites.push(sprite);
+         }
+     },
+
+     createPlatformSprites: function(){
+         for (var index = 0; index < this.levelData.platforms.length; index++) {
+             var platform = this.levelData.platforms[index];
+             var sprite = new Sprite("platform");
+             sprite.left = platform.left;
+             sprite.top = platform.top;
+             sprite.width = platform.width;
+             sprite.height = platform.height;
+             var artist = new platformArtist(sprite, this.context, this.spritesheet, platform.cell, platform.shape);
+             sprite.artist = artist;
+             this.platforms.push(sprite);
+             this.sprites.push(sprite);
+         }
+     },
+     
+     createrunnerSprite: function(){
+          var runner = this.levelData.runner;
+          var sprite = new Sprite("runner");
+          sprite.top = runner.top;
+          sprite.left = runner.left;
+          sprite.width = runner.width;
+          sprite.height = runner.height;
+          var artist = new spriteArtist(sprite, this.context, this.spritesheet, data[this.runnerType][runner.vector], runner.state)
+          sprite.artist = artist;
+          this.runner = sprite;
+          this.sprites.push(sprite);
+     },
+
+     createSprites: function(){
+         if(this.levelData.grounds)
+            this.createGroundSprites();
+         if(this.levelData.platforms)
+            this.createPlatformSprites();
+         if(this.levelData.runner)
+            this.createrunnerSprite();
+     },
+
      initializeGame: function(){
          this.initializeImages();
-         this.loadLevelData();
+         this.loadLevel();
      }
 }
 window.addEventListener('keydown', function (e) {

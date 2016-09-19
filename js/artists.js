@@ -107,17 +107,17 @@ platformArtist.prototype = {
     },
     drawRectangle: function(){
         for(var top = this.sprite.top; top < this.sprite.top + this.sprite.height; top += this.cell.height)
-            drawRow(top, this.sprite.left, this.sprite.left + this.sprite.width);
+            this.drawRow(top, this.sprite.left, this.sprite.left + this.sprite.width);
     },
     drawRow: function(top, leftRow, rightRow){
         for(var left = leftRow; left < rightRow; left += this.cell.width)
-            doawCell(left, top);
+            this.drawCell(left, top);
     },
     drawCell: function(left, top){
-        this.context.drawImage(this.spritesheet, cell.left, cell.top,
-                                            cell.width, cell.height,
+        this.context.drawImage(this.spritesheet, this.cell.left, this.cell.top,
+                                            this.cell.width, this.cell.height,
                                             left, top,
-                                            cell.width, cell.height);
+                                            this.cell.width, this.cell.height);
     }
 }
 
