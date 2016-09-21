@@ -24,7 +24,10 @@ var superMario = function(){
     this.VELOCITY_GROUND = 0.001;
     this.backgroundOffset = 0;
     this.BACKGROUND_WIDTH = data.background.width;
-    this.DEFAULT_BACKGROUND_VELOCITY = 0.0001;
+    this.DEFAULT_BACKGROUND_VELOCITY = 0.0004;
+
+    //.............................................................Velocitires
+    this.RUNNER_A_TRESHHOLD = 0.0001;
 
     //................................................................sprites
     this.runnerType = "superMario";
@@ -201,12 +204,23 @@ superMario.prototype = {
           var artist = new spriteArtist(sprite, this.context, this.spritesheet, data[this.runnerType][runner.vector], runner.state);
           sprite.behaviours.push(new CycleBehavior(0, 100));
           sprite.velocityX = 0;
-          sprite.aX = 0.00008;
-        //   setTimeout(function(){
-        //       sprite.aX = 0;
-        //   }, 3000);
+          sprite.aX = 0;
           sprite.behaviours.push(new MoveBehavior(0, sprite.velocityX, sprite.aX, sprite.left));
+          sprite.behaviours.push(new RunnerMovementBehavior());
           sprite.artist = artist;
+          sprite.moveRigth = function(){
+              if(sprite.status === "moveRight") return;
+              sprite.aX = game.DEFAULT_BACKGROUND_VELOCITY;
+              sprite.status = "moveRight";
+          };
+          sprite.moveLeft = function(){
+              if(sprite.status === "moveLeft") return;
+              sprite.aX = -game.DEFAULT_BACKGROUND_VELOCITY;
+              sprite.status = "moveLeft";
+          };
+          sprite.stop = function(){
+              sprite.status = "stop";
+          }
           this.runner = sprite;
           this.sprites.push(sprite);
      },
@@ -225,15 +239,37 @@ superMario.prototype = {
          this.loadLevel();
      }
 }
-window.addEventListener('keydown', function (e) {
-   var key = e.keyCode;
 
-  
-   
- if (key === 80) { // 'p'
-      game.togglePause();
-   }
-   
+window.addEventListener('keydown', function (e) {
+    var key = e.keyCode;
+
+    switch (key) {
+        case 39:
+            game.runner.moveRigth();
+            break;
+        case 37:
+            game.runner.moveLeft();
+            break;
+        case 80: //p
+            game.togglePause();
+            break;
+    }
 });
+window.addEventListener('keyup', function(e){
+    var key = e.keyCode;
+
+    switch (key) {
+        case 39:
+        case 37:
+            game.runner.stop();
+            break;
+    }
+});
+window.addEventListener("keyup", function(e){
+ var key = e.keyCode;
+
+  console.log(key);
+});
+
 var game = new superMario();
 game.initializeGame();
