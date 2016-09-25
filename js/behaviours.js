@@ -31,10 +31,10 @@ CycleBehavior = function(pause, duration){
  }
  MoveBehavior.prototype = {
      execute: function(sprite, now, context, lastAdvanceTime){
-         if(sprite.status === "stop"){
-            this.stop(sprite, now);
-            return;
-        }
+        //  if(sprite.status === "stop"){
+        //     this.stop(sprite, now);
+        //     return;
+        // }
          if(!sprite.velocityX && !sprite.aX) return;
          if(!this.t0){
              this.t0  = now;
@@ -86,12 +86,30 @@ CycleBehavior = function(pause, duration){
  }
  RunnerMovementBehavior.prototype = {
      execute: function(sprite, now){
+         if(sprite.status === "moved") return;
          if(!sprite.velocityX && !sprite.aX) return;
          if(!sprite.t0) return;
-         var v = mechanics.getV(sprite.aX, sprite.velocityX, now - sprite.t0);
-         if((sprite.aX > 0 && v > 0.2) || (sprite.aX<0 && v < -0.2)){
-            sprite.aX = 0;
+            var v = mechanics.getV(sprite.aX, sprite.velocityX, now - sprite.t0);
+         if(sprite.status === "stop"){
+            if(v > 0)
+                sprite.aX = -0.0009;
+            else if(v < 0)
+                sprite.aX = 0.0009;
             sprite.velocityX = v;
+            sprite.status = "stopped"; 
+            // if((sprite.aX > 0 && v > 0.2) || (sprite.aX<0 && v < -0.2)){
+            //     sprite.aX = 0;
+            //     sprite.velocityX = v;
+            // }
+         }
+         if(sprite.status === "stopped"){
+             if((sprite.aX <= 0 && v <=0) || (sprite.aX >= 0 && v >= 0)){
+                sprite.aX = sprite.velocityX = 0;
+            }
+         }
+         if(sprite.status === "moveRight" || sprite.status === "moveLeft"){
+             sprite.velocityX = v;
+             sprite.status = "moved";
          }
      }
  }

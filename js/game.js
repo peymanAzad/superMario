@@ -7,7 +7,7 @@ var superMario = function(){
     this.toast = document.getElementById("toast");
     this.paused = false;
 
-
+    this.keyStatus = "";
     //........................................................levels
     this.level = 0;
     this.subLevel = "main";
@@ -241,6 +241,9 @@ superMario.prototype = {
 }
 
 window.addEventListener('keydown', function (e) {
+    if(game.key === "pressed")return;
+    game.keyStatus = "pressed";
+    
     var key = e.keyCode;
 
     switch (key) {
@@ -256,6 +259,8 @@ window.addEventListener('keydown', function (e) {
     }
 });
 window.addEventListener('keyup', function(e){
+    if(game.key === "up")return;
+    game.keyStatus = "up";
     var key = e.keyCode;
 
     switch (key) {
@@ -265,11 +270,11 @@ window.addEventListener('keyup', function(e){
             break;
     }
 });
-window.addEventListener("keyup", function(e){
- var key = e.keyCode;
+// window.addEventListener("keyup", function(e){
+//  var key = e.keyCode;
 
-  console.log(key);
-});
+//   console.log(key);
+// });
 
 var game = new superMario();
 game.initializeGame();
