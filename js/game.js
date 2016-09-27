@@ -240,6 +240,27 @@ superMario.prototype = {
      }
 }
 
+var Key = {
+  _pressed: {},
+
+  LEFT: 37,
+  UP: 38,
+  RIGHT: 39,
+  DOWN: 40,
+  
+  isDown: function(keyCode) {
+    return this._pressed[keyCode];
+  },
+  
+  onKeydown: function(keyCode) {
+    this._pressed[keyCode] = true;
+  },
+  
+  onKeyup: function(keyCode) {
+    delete this._pressed[keyCode];
+  }
+};
+window.addEventListener('keyup', function(event) { Key.onKeyup(event.keyCode); }, false);
 window.addEventListener('keydown', function (e) {
     if(game.key === "pressed")return;
     game.keyStatus = "pressed";
@@ -247,34 +268,17 @@ window.addEventListener('keydown', function (e) {
     var key = e.keyCode;
 
     switch (key) {
+        case 40:
         case 39:
-            game.runner.moveRigth();
-            break;
+        case 38:
         case 37:
-            game.runner.moveLeft();
+            Key.onKeydown(key);
             break;
         case 80: //p
             game.togglePause();
             break;
     }
-});
-window.addEventListener('keyup', function(e){
-    if(game.key === "up")return;
-    game.keyStatus = "up";
-    var key = e.keyCode;
-
-    switch (key) {
-        case 39:
-        case 37:
-            game.runner.stop();
-            break;
-    }
-});
-// window.addEventListener("keyup", function(e){
-//  var key = e.keyCode;
-
-//   console.log(key);
-// });
+}, false);
 
 var game = new superMario();
 game.initializeGame();
