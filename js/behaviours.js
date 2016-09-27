@@ -5,6 +5,10 @@ CycleBehavior = function(pause, duration){
 };
  CycleBehavior.prototype = {
       execute: function(sprite, now, context, lastAnimationFrame){
+          if(sprite.type === "runner"){
+            if(sprite.velocityX === 0) return;
+            else this.duration = 20/Math.abs(sprite.velocityX);
+          }
           if(!this.lastAdvanceTime){
               this.lastAdvanceTime = now;
           }
@@ -52,8 +56,8 @@ CycleBehavior = function(pause, duration){
      }
  };
  RunnerMovementBehavior = function(){
-     this.MOVE_ACCESSLATOR = 0.00025;
-     this.VELOCITY_TRESHURE = 0.1;
+     this.MOVE_ACCESSLATOR = 0.0004;
+     this.VELOCITY_TRESHURE = 0.2;
  }
  RunnerMovementBehavior.prototype = {
      execute: function(sprite, now){
@@ -64,12 +68,12 @@ CycleBehavior = function(pause, duration){
      },
      stop: function(sprite){
          if(!sprite.velocityX && !sprite.aX) return;
-         if(sprite.velocityX > 0) sprite.aX = -this.MOVE_ACCESSLATOR;
-         else if(sprite.velocityX < 0) sprite.aX = this.MOVE_ACCESSLATOR;
          if((sprite.aX > 0 && sprite.velocityX >= 0) || (sprite.aX < 0 && sprite.velocityX <= 0)){
              sprite.aX = 0;
              sprite.velocityX = 0;
          } 
+         if(sprite.velocityX > 0) sprite.aX = -this.MOVE_ACCESSLATOR;
+         else if(sprite.velocityX < 0) sprite.aX = this.MOVE_ACCESSLATOR;
      },
      moveLeft: function(sprite){
          if(sprite.velocityX < -this.VELOCITY_TRESHURE){
