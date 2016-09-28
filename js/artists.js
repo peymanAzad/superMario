@@ -10,26 +10,12 @@ var groundArtist = function(sprite, context, spritesheet, type, convas){
 }
 groundArtist.prototype = {
     draw:function(){
-        //this.calculateDrawing();
         for(var top = this.sprite.top; top <= this.sprite.top + this.sprite.height; top += this.type.body.middle.height){
             if(this.type.serface && top === this.sprite.top){
                 this.drawRow(this.type.serface, top);
             }
             else this.drawRow(this.type.body, top);
         }
-    },
-    calculateDrawing:function(){
-        if(this.sprite.left + this.sprite.width > this.sprite.offset)
-            if(this.sprite.left > this.sprite.offset)
-                this.leftToDraw = this.sprite.left;
-            else {
-                this.leftToDraw = this.sprite.offset;
-                this.widthToDraw -= this.sprite.offset - this.sprite.left;
-            }
-        if(this.sprite.left < this.sprite.offset + this.convas.width)
-            if(this.sprite.left + this.sprite.width < this.sprite.offset + this.convas.width)
-                this.widthToDraw += this.sprite.width;
-            else this.widthToDraw += this.sprite.offset + this.convas.width;
     },
     drawRow:function(row, top){
         var widthToOffset = row.left.width;

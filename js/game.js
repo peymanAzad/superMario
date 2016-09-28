@@ -28,7 +28,7 @@ var superMario = function(){
 
     //.............................................................Velocitires
     this.RUNNER_A_TRESHHOLD = 0.0001;
-
+    this.GRAVITY_ACCESSLATOR = -0.0013;
     //................................................................sprites
     this.runnerType = "superMario";
 
@@ -199,28 +199,19 @@ superMario.prototype = {
           var sprite = new Sprite("runner");
           sprite.top = runner.top;
           sprite.left = runner.left;
-          sprite.width = runner.width;
-          sprite.height = runner.height;
+          sprite.width = data[this.runnerType][runner.vector].idle[0].width;
+          sprite.height = data[this.runnerType][runner.vector].idle[0].height;
+          sprite.aY = game.GRAVITY_ACCESSLATOR;
           var artist = new spriteArtist(sprite, this.context, this.spritesheet, data[this.runnerType][runner.vector], runner.state);
           sprite.behaviours.push(new CycleBehavior(0, 100));
           sprite.velocityX = 0;
           sprite.aX = 0;
           sprite.behaviours.push(new MoveBehavior(0, sprite.velocityX, sprite.aX, sprite.left));
           sprite.behaviours.push(new RunnerMovementBehavior());
+          sprite.behaviours.push(new RunnerStateBehaviour());
+          sprite.behaviours.push(new FallBehaviour(0, sprite.velocityY, sprite.aY, sprite.top))
           sprite.artist = artist;
-          sprite.moveRigth = function(){
-              if(sprite.status === "moveRight") return;
-              sprite.aX = game.DEFAULT_BACKGROUND_VELOCITY;
-              sprite.status = "moveRight";
-          };
-          sprite.moveLeft = function(){
-              if(sprite.status === "moveLeft") return;
-              sprite.aX = -game.DEFAULT_BACKGROUND_VELOCITY;
-              sprite.status = "moveLeft";
-          };
-          sprite.stop = function(){
-              sprite.status = "stop";
-          }
+          
           this.runner = sprite;
           this.sprites.push(sprite);
      },
@@ -247,6 +238,7 @@ var Key = {
   UP: 38,
   RIGHT: 39,
   DOWN: 40,
+  JUMP: 32,
   
   isDown: function(keyCode) {
     return this._pressed[keyCode];
@@ -268,6 +260,7 @@ window.addEventListener('keydown', function (e) {
     var key = e.keyCode;
 
     switch (key) {
+        case 32: //space
         case 40:
         case 39:
         case 38:

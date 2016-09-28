@@ -4,28 +4,28 @@ var levels = [
             background:data.background,
             runner:{
                 top:10,
-                left:50,
+                left:450,
                 width:data.mario.right.idle[0].width,
                 height:data.mario.right.idle[0].height,
                 vector:"right",
-                state: "run"
+                state: "idle"
             },
             platforms:[
                 {
-                    top:100,
+                    top:200,
                     left:400,
                     width:200,
-                    height:100,
+                    height:16,
                     cell: data.well,
                     shape: "Rectangle"
                 }
             ],
             grounds:[
                 {
-                    top:300,
+                    top:400-16*5,
                     left:0,
-                    width:800,
-                    height:100,
+                    width:800-15,
+                    height:16*5,
                     opacity:1
                 }
             ]
