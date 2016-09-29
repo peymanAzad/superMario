@@ -49,13 +49,20 @@ CycleBehavior = function(pause, duration){
             return;
          }
          this.v = sprite.velocityX = mechanics.getV(sprite.aX, this.v0, now - this.t0);
-         sprite.left = mechanics.getdeltaX(this.a, this.v0, now - this.t0) + this.x0;
+         var deltaX = mechanics.getdeltaX(this.a, this.v0, now - this.t0);
+         if(sprite.type === "runner" && game.moveScreen){
+             game.spriteOffset = deltaX + this.x0 -400;
+         }else{
+            sprite.left = deltaX + this.x0;
+         }
      },
      reset: function(sprite, now){
          this.v0 = this.v = sprite.velocityX;
          this.a = sprite.aX;
          sprite.t0 = this.t0 = now;
-         this.x0 = sprite.left;
+         if(sprite.type === "runner")
+            this.x0 = sprite.left + game.spriteOffset;
+         else this.x0 = sprite.left;
      }
  };
  RunnerMovementBehavior = function(){
@@ -72,6 +79,10 @@ CycleBehavior = function(pause, duration){
             sprite.velocityY = this.VELOCITY_JUMP;
             sprite.jumping = true;
         }
+        if(sprite.left >= 400 && sprite.velocityX > 0)
+            game.moveScreen = true;
+        else if( game.spriteOffset <= 0)
+            game.moveScreen = false;
      },
      stop: function(sprite){
          if(!sprite.velocityX && !sprite.aX) return;

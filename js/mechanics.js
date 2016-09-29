@@ -6,7 +6,7 @@ var mechanics = {
         return (a * t) + v0;
     },
     isPlatformUnderSprite(sprite, platform){
-        if(sprite.left + sprite.width > platform.left && sprite.left < platform.left + platform.width){
+        if(sprite.left + sprite.width > platform.left - game.spriteOffset && sprite.left < platform.left + platform.width - game.spriteOffset){
             if (sprite.top + sprite.height >= platform.top && sprite.top < platform.top + platform.height){
                 sprite.top = platform.top - sprite.height;
                 return true;

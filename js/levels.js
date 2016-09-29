@@ -4,7 +4,7 @@ var levels = [
             background:data.background,
             runner:{
                 top:10,
-                left:450,
+                left:50,
                 width:data.mario.right.idle[0].width,
                 height:data.mario.right.idle[0].height,
                 vector:"right",

@@ -29,6 +29,10 @@ var superMario = function(){
     //.............................................................Velocitires
     this.RUNNER_A_TRESHHOLD = 0.0001;
     this.GRAVITY_ACCESSLATOR = -0.0013;
+
+    //................................................................offsets
+    this.spriteOffset = 0;
+    
     //................................................................sprites
     this.runnerType = "superMario";
 
@@ -106,9 +110,13 @@ superMario.prototype = {
         for (var i = 0; i < this.sprites.length; i++) {
             var sprite = this.sprites[i];
             if(sprite.visible && this.isSpriteInView(sprite)){
-                this.context.translate(-sprite.offset, 0);
+                if(sprite.type === "runner"){
+                    sprite.draw(this.context);
+                    continue;
+                }
+                this.context.translate(-game.spriteOffset, 0);
                 sprite.draw(this.context);
-                this.context.translate(sprite.offset, 0)
+                this.context.translate(game.spriteOffset, 0)
             }
         }
     },
